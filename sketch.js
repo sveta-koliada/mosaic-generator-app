@@ -10,6 +10,19 @@ var originalImage = null; // Store the original image
 var defaultImage; // Default image is loaded in preload.js
 var isLoading = false; // Track loading state
 
+// Emoji selection variables
+var emojiButtons;
+var selectedEmoji = null; // Current selected emoji type (link, dice, cocktail, smile)
+var defaultSet = []; // Default set of images
+
+// Theme images - these will replace the source image
+var themeImages = {
+  link: null,
+  dice: null,
+  cocktail: null,
+  smile: null
+};
+
 function setup() {
   // Create a default canvas 
   createCanvas(800, 600);
@@ -22,6 +35,54 @@ function setup() {
   // Get references to UI elements
   fileInput = select('#file-input');
   saveButton = select('#save-button');
+  
+  // Setup default emoji sets
+  defaultSet = [img01, img02, img03, img04, img05, img06, img07, img08, img09];
+  
+  // Assign theme images
+  themeImages.link = linkIcon;
+  themeImages.dice = diceIcon;
+  themeImages.cocktail = cocktailIcon;
+  themeImages.smile = smileIcon;
+  
+  // Setup emoji buttons
+  emojiButtons = selectAll('.emoji-button');
+  for (let i = 0; i < emojiButtons.length; i++) {
+    emojiButtons[i].mousePressed(function() {
+      let emoji = this.attribute('data-emoji');
+      
+      // Toggle selection
+      if (selectedEmoji === emoji) {
+        // Deselect if already selected
+        selectedEmoji = null;
+        this.removeClass('active');
+        
+        // Revert to default image
+        if (defaultImage) {
+          originalImage = defaultImage;
+          adjustCanvasToImage(defaultImage);
+        }
+      } else {
+        // Select new emoji and deselect others
+        selectedEmoji = emoji;
+        for (let j = 0; j < emojiButtons.length; j++) {
+          emojiButtons[j].removeClass('active');
+        }
+        this.addClass('active');
+        
+        // Set the theme image as the source
+        if (themeImages[emoji]) {
+          originalImage = themeImages[emoji];
+          adjustCanvasToImage(themeImages[emoji]);
+        }
+      }
+      
+      // Force redraw immediately with new emoji set
+      if (sourceImg) {
+        redraw(); // Force immediate redraw
+      }
+    });
+  }
   
   // Add event handlers
   fileInput.changed(handleFileUpload);

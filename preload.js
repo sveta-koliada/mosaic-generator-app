@@ -10,6 +10,12 @@ function preload() {
   img08 = loadImage("assets/img08-t.svg");
   img09 = loadImage("assets/img09-t.svg");
   
+  // Load emoji icons for image selection
+  linkIcon = loadImage("assets/link.png");
+  diceIcon = loadImage("assets/play.png");
+  cocktailIcon = loadImage("assets/cocktail.png");
+  smileIcon = loadImage("assets/smile.png");
+  
   // Load default image
   defaultImage = loadImage("assets/m-default.png");
 }
